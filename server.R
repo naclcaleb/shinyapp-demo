@@ -12,9 +12,8 @@ rolling_avg <- function(x, n) { stats::filter(x, rep(1/n, n)) }
 
 vo2_max <- processed_data$VO2.Kg |> rolling_avg(10) |> na.omit() |> max()
 
-
-# Define server logic required to draw a histogram
 server <- function(input, output, session) {
+
     output$initial_data_plot <- renderPlot({
         ggplot(
             data = processed_data,
@@ -38,7 +37,7 @@ server <- function(input, output, session) {
         plot_theme
     }, width = 700)
 
-    
+
 
     output$comparison_plot <- renderPlot({
         ggplot(
@@ -58,6 +57,8 @@ server <- function(input, output, session) {
             x = expression('%'*VO[2]*' max'),
             y = input$vo2Comparison
         ) +
+
+        scale_x_continuous(labels = function(x) { paste0(x * 100, '%') }) +
 
         plot_theme
     })
